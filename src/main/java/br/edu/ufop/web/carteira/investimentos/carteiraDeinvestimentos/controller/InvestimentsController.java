@@ -1,13 +1,13 @@
 package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.controller;
 
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.InvestimentsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/investments")
@@ -27,6 +27,15 @@ public class InvestimentsController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+
+    @GetMapping
+    public ResponseEntity<List<InvestimentsDTO>> getAllInvestments() {
+        try {
+            return ResponseEntity.ok(investimentsService.getAllInvestments());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 

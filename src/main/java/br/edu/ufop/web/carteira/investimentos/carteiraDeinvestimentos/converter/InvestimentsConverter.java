@@ -2,6 +2,7 @@ package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.converter
 
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.InvestmentsDomain;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.models.InvestimentsModel;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,17 @@ public class InvestimentsConverter {
                 investments.getSymbol(),
                 investments.getQuantity(),
                 investments.getPurchasePrice()
+        );
+    }
+
+    public static InvestimentsDTO toAllInvestimentsDTO(InvestimentsModel investments) {
+        return new InvestimentsDTO(
+                investments.getId(),
+                investments.getType(),
+                investments.getSymbol(),
+                investments.getQuantity(),
+                investments.getPurchasePrice(),
+                investments.getPurchaseDate()
         );
     }
 
