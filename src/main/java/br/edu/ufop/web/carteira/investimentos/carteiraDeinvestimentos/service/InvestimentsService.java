@@ -54,4 +54,14 @@ public class InvestimentsService {
 
 
     }
+
+    public InvestimentsDTO deleteInvestimentById(UUID id) {
+        Optional<InvestimentsModel> investimentOptional = investimentsRepository.findById(id);
+        if (investimentOptional.isPresent()) {
+            investimentsRepository.deleteById(id);
+            return InvestimentsConverter.toAllInvestimentsDTO(investimentOptional.get());
+        } else {
+            throw new RuntimeException("Investimento não encontrado com o ID: " + id);
+        }
+    }
 }

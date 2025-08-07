@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/investments")
@@ -50,8 +51,14 @@ public class InvestimentsController {
         }
     }
 
-
-
+    @GetMapping("/id={id}")
+    public ResponseEntity<InvestimentsDTO> deleteInvestimentById(@PathVariable UUID id) {
+        try {
+            return ResponseEntity.ok(investimentsService.deleteInvestimentById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 
 
