@@ -7,9 +7,11 @@ import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.Inves
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.models.InvestimentsModel;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.repositories.IInvestimentsRepository;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.BrapiClient;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.QuoteResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +24,20 @@ import java.util.stream.Collectors;
 public class InvestimentsService {
 
     private final IInvestimentsRepository investimentsRepository;
+    private final BrapiClient brapiClient;
 
 
-    public CreateInvestimentsDTO createInvestiment(CreateInvestimentsDTO investiment) {
+    public InvestimentsDTO createInvestiment(CreateInvestimentsDTO investiment) {
 
         InvestmentsDomain investmentsDomain = InvestimentsConverter.toInvestmentsDomain(investiment);
-        // espaço para fazer validações ou lógicas adicionais
+
+        //  Obter o preço atual da ação usando o BrapiClient
+        QuoteResponse response = brapiClient.getQuote(investmentsDomain.getSymbol());
+
+        Double precoAtual = response.getResults().get(0).getRegularMarketPrice();
+
+
+        investmentsDomain.setPurchasePrice(precoAtual.floatValue());
 
 
         InvestimentsModel investimentsModel = InvestimentsConverter.toInvestimentsModel(investmentsDomain);
@@ -40,7 +50,7 @@ public class InvestimentsService {
 
     public List<InvestimentsDTO> getAllInvestments() {
         return investimentsRepository.findAll().stream()
-                .map(InvestimentsConverter::toAllInvestimentsDTO)
+                .map(InvestimentsConverter::toInvestimentsDTO)
                 .collect(Collectors.toList());
     }
 
@@ -50,7 +60,7 @@ public class InvestimentsService {
         List<InvestimentsModel> investimentsModel = investimentsRepository.findAllByType(type);
 
 
-        return investimentsModel.stream().map(InvestimentsConverter::toAllInvestimentsDTO).toList();
+        return investimentsModel.stream().map(InvestimentsConverter::toInvestimentsDTO).toList();
 
 
     }
@@ -59,7 +69,7 @@ public class InvestimentsService {
         Optional<InvestimentsModel> investimentOptional = investimentsRepository.findById(id);
         if (investimentOptional.isPresent()) {
             investimentsRepository.deleteById(id);
-            return InvestimentsConverter.toAllInvestimentsDTO(investimentOptional.get());
+            return InvestimentsConverter.toInvestimentsDTO(investimentOptional.get());
         } else {
             throw new RuntimeException("Investimento não encontrado com o ID: " + id);
         }

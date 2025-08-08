@@ -5,7 +5,6 @@ import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.Enum
 public record CreateInvestimentsDTO(
         EnumInvestimentsType type,
         String symbol,
-        Integer quantity,
-        Float purchasePrice
+        Integer quantity
 ) {
 }

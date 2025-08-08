@@ -16,9 +16,9 @@ public class InvestimentsConverter {
                 .type(investiments.type())
                 .symbol(investiments.symbol())
                 .quantity(investiments.quantity())
-                .purchasePrice(investiments.purchasePrice())
                 .build();
     }
+
 
     public static InvestimentsModel toInvestimentsModel(InvestmentsDomain investments) {
         return InvestimentsModel.builder()
@@ -31,16 +31,9 @@ public class InvestimentsConverter {
                 .build();
     }
 
-    public static CreateInvestimentsDTO toInvestimentsDTO(InvestimentsModel investments) {
-        return new CreateInvestimentsDTO(
-                investments.getType(),
-                investments.getSymbol(),
-                investments.getQuantity(),
-                investments.getPurchasePrice()
-        );
-    }
 
-    public static InvestimentsDTO toAllInvestimentsDTO(InvestimentsModel investments) {
+
+    public static InvestimentsDTO toInvestimentsDTO(InvestimentsModel investments) {
         return new InvestimentsDTO(
                 investments.getId(),
                 investments.getType(),
