@@ -7,8 +7,10 @@ import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.Inves
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.models.InvestimentsModel;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.repositories.IInvestimentsRepository;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.BrapiClient;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.QuoteResponse;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.awesomeApi.AwesomeApi;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.brapiApi.BrapiClient;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.response.AwesomeApiCriptoResponse;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.response.QuoteResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,26 +20,49 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
 @Service
 @AllArgsConstructor
 public class InvestimentsService {
 
     private final IInvestimentsRepository investimentsRepository;
     private final BrapiClient brapiClient;
+    private final AwesomeApi  awesomeApi;
 
 
     public InvestimentsDTO createInvestiment(CreateInvestimentsDTO investiment) {
 
         InvestmentsDomain investmentsDomain = InvestimentsConverter.toInvestmentsDomain(investiment);
 
-        //  Obter o preço atual da ação usando o BrapiClient
-        QuoteResponse response = brapiClient.getQuote(investmentsDomain.getSymbol());
+        if(investmentsDomain.getType()== EnumInvestimentsType.ACAO) {
 
-        Double precoAtual = response.getResults().get(0).getRegularMarketPrice();
+            //  Obter o preço atual da ação usando o BrapiClient
+            QuoteResponse response = brapiClient.getQuote(investmentsDomain.getSymbol());
 
+            // obter o preço atual da ação
+            Double precoAtual = response.getResults().get(0).getRegularMarketPrice();
 
-        investmentsDomain.setPurchasePrice(precoAtual.floatValue());
+            investmentsDomain.setPurchasePrice(precoAtual.floatValue());
+
+        }else if (investmentsDomain.getType() == EnumInvestimentsType.CRIPTO){
+
+            // Obter o preço atual da criptomoeda usando o AwesomeApiCriptoClient
+
+            AwesomeApiCriptoResponse response = awesomeApi.getCripto(investmentsDomain.getSymbol());
+            System.out.print(response);
+
+            // Obter o preço de compra (bid) da criptomoeda
+            String symbol = investmentsDomain.getSymbol() + "BRL";
+            AwesomeApiCriptoResponse.CriptoBRL cripto = response.getQuotes().get(symbol);
+
+            if (cripto != null) {
+                String precoCompra = cripto.getBid();
+                investmentsDomain.setPurchasePrice(Float.parseFloat(precoCompra));
+            }
+
+        } else {
+            throw new RuntimeException("Tipo de investimento não suportado: " + investmentsDomain.getType());
+        }
+
 
 
         InvestimentsModel investimentsModel = InvestimentsConverter.toInvestimentsModel(investmentsDomain);

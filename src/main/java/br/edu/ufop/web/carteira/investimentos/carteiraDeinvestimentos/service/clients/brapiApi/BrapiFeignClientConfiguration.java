@@ -1,4 +1,4 @@
-package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients;
+package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.brapiApi;
 
 
 import feign.RequestInterceptor;

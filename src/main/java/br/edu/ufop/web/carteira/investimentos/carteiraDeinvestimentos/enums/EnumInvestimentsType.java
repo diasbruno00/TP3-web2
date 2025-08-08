@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum EnumInvestimentsType {
 
-    ACOES(1, "Ações"),
+    ACAO(1, "Ações"),
     CRIPTO(2, "Cripto"),
     FUNDOS(3, "Fundos"),
     RENDIMENTO_FIXO(4, "Rendimento Fixo");
