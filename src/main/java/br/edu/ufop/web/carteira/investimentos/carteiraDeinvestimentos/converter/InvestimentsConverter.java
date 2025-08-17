@@ -2,6 +2,7 @@ package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.converter
 
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.InvestmentsDomain;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.EditInvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.models.InvestimentsModel;
 import lombok.AccessLevel;
@@ -19,6 +20,16 @@ public class InvestimentsConverter {
                 .build();
     }
 
+    public static InvestmentsDomain toInvestmentsDomain(EditInvestimentsDTO investments) {
+        InvestmentsDomain investmentsDomain = new InvestmentsDomain();
+        investmentsDomain.setSymbol(investments.symbol());
+        investmentsDomain.setQuantity(investments.quantity());
+        investmentsDomain.setPurchasePrice(investments.purchasePrice());
+        investmentsDomain.setInitialInvestment(investments.initialInvestment());
+        investmentsDomain.calculateInitialInvestment();
+        return investmentsDomain;
+    }
+
 
     public static InvestimentsModel toInvestimentsModel(InvestmentsDomain investments) {
         return InvestimentsModel.builder()
@@ -28,6 +39,7 @@ public class InvestimentsConverter {
                 .quantity(investments.getQuantity())
                 .purchasePrice(investments.getPurchasePrice())
                 .purchaseDate(investments.getPurchaseDate())
+                .initialInvestment(investments.getInitialInvestment())
                 .build();
     }
 
@@ -40,7 +52,9 @@ public class InvestimentsConverter {
                 investments.getSymbol(),
                 investments.getQuantity(),
                 investments.getPurchasePrice(),
-                investments.getPurchaseDate()
+                investments.getPurchaseDate(),
+                investments.getInitialInvestment()
+
         );
     }
 

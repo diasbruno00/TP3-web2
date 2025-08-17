@@ -11,6 +11,8 @@ public record InvestimentsDTO(
         String symbol ,
         Integer quantity,
         Float purchasePrice,
-        LocalDateTime purchaseDate
+        LocalDateTime purchaseDate,
+        Float initialInvestment
+
 ) {
 }

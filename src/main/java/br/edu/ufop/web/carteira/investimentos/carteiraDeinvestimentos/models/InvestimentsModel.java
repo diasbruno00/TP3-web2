@@ -24,6 +24,7 @@ public class InvestimentsModel {
     private Integer quantity;
     private Float purchasePrice;
     private LocalDateTime purchaseDate;
+    private Float initialInvestment;
 
 
     @PrePersist

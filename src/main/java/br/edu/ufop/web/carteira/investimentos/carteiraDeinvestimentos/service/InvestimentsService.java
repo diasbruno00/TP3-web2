@@ -4,6 +4,7 @@ import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.converter.
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.InvestmentsDomain;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsSummaryDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.models.InvestimentsModel;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.repositories.IInvestimentsRepository;
@@ -27,6 +28,14 @@ public class InvestimentsService {
     private final IInvestimentsRepository investimentsRepository;
     private final BrapiClient brapiClient;
     private final AwesomeApi  awesomeApi;
+
+    public InvestimentsSummaryDTO investimentsSummary(){
+        Float totalInvested = investimentsRepository.sumAllInitialInvestments();
+        Long  assetCount = investimentsRepository.countAllInvestments();
+        List<Object[]> totalByType = investimentsRepository.sumInitialInvestmentByType();
+
+        return new InvestimentsSummaryDTO(totalInvested, assetCount, totalByType);
+    }
 
 
     public InvestimentsDTO createInvestiment(CreateInvestimentsDTO investiment) {
@@ -63,6 +72,7 @@ public class InvestimentsService {
             throw new RuntimeException("Tipo de investimento não suportado: " + investmentsDomain.getType());
         }
 
+        investmentsDomain.calculateInitialInvestment();
 
 
         InvestimentsModel investimentsModel = InvestimentsConverter.toInvestimentsModel(investmentsDomain);

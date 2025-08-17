@@ -2,6 +2,7 @@ package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.controlle
 
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsSummaryDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.InvestimentsService;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,16 @@ public class InvestimentsController {
 
     private final InvestimentsService investimentsService;
 
+
+    @GetMapping("/summary")
+    public ResponseEntity<InvestimentsSummaryDTO> investimentsSummary() {
+        try {
+            return ResponseEntity.ok(investimentsService.investimentsSummary());
+        } catch (Exception e) {
+            System.out.println("Erro ao exibir resumo dos investimentos: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
     @PostMapping
     public ResponseEntity<InvestimentsDTO> createInvestiment(@RequestBody CreateInvestimentsDTO investiment) {
@@ -54,7 +65,7 @@ public class InvestimentsController {
         }
     }
 
-    @GetMapping("/id={id}")
+    @DeleteMapping("/id={id}")
     public ResponseEntity<InvestimentsDTO> deleteInvestimentById(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok(investimentsService.deleteInvestimentById(id));
