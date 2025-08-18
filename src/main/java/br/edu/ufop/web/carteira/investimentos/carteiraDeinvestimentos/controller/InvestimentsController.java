@@ -9,7 +9,6 @@ import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.In
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -45,15 +44,10 @@ public class InvestimentsController {
      */
     @PostMapping
     public ResponseEntity<InvestimentsDTO> createInvestiment(@RequestBody CreateInvestimentsDTO investiment) {
-        try{
+
             InvestimentsDTO createdInvestiment = investimentsService.createInvestiment(investiment);
 
             return ResponseEntity.ok(createdInvestiment);
-
-        } catch (Exception e) {
-            System.out.println("Erro ao criar investimento: " + e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
 
     }
 
@@ -108,14 +102,16 @@ public class InvestimentsController {
         }
     }
 
+    /**
+     * Endpoint para atualizar um investimento por ID.
+     * Recebe um objeto EditInvestimentsDTO no corpo da requisição e retorna o investimento atualizado.
+     *
+     * @param investiment Objeto DTO contendo os dados do investimento a ser atualizado.
+     * @return ResponseEntity com o EditInvestimentsDTO atualizado ou erro 400 em caso de falha.
+     */
     @PutMapping
     public ResponseEntity<EditInvestimentsDTO> updateInvestimentById(@RequestBody EditInvestimentsDTO investiment) {
-        try {
             return ResponseEntity.ok(investimentsService.updateInvestimentById(investiment));
-        } catch (Exception e) {
-            System.out.println("Erro ao atualizar investimento: " + e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
     }
 
 

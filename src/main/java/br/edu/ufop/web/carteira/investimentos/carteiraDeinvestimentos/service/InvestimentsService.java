@@ -2,6 +2,8 @@ package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service;
 
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.converter.InvestimentsConverter;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.InvestmentsDomain;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.useCase.CreateInvestimentsUseCase;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.useCase.EditInvestimentsUseCase;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.EditInvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
@@ -74,8 +76,9 @@ public class InvestimentsService {
             //throw new RuntimeException("Tipo de investimento não suportado: " + investmentsDomain.getType());
         //}
 
-        investmentsDomain.calculateInitialInvestment();
-
+        CreateInvestimentsUseCase createInvestimentsUseCase = new CreateInvestimentsUseCase(investmentsDomain);
+        createInvestimentsUseCase.validateInvestments();
+        createInvestimentsUseCase.calculateInitialInvestment();
 
         InvestimentsModel investimentsModel = InvestimentsConverter.toInvestimentsModel(investmentsDomain);
 
@@ -124,6 +127,11 @@ public class InvestimentsService {
         if(investimentOptional.isEmpty()){
             throw new RuntimeException("Investimento não encontrado com o ID: " + investiment.id());
         }
+
+        InvestmentsDomain investmentsDomain = InvestimentsConverter.toEditInvestmentsDomain(investiment);
+
+        EditInvestimentsUseCase editInvestimentsUseCase = new EditInvestimentsUseCase(investmentsDomain);
+        editInvestimentsUseCase.validateEditInvestments();
 
         InvestimentsModel investimentsModel = investimentOptional.get();
         investimentsModel.setQuantity(investiment.quantity());

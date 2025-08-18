@@ -55,7 +55,6 @@ public class InvestimentsConverter {
         investmentsDomain.setId(investments.id());
         investmentsDomain.setQuantity(investments.quantity());
         investmentsDomain.setPurchasePrice(investments.purchasePrice());
-        investmentsDomain.calculateInitialInvestment();
         return investmentsDomain;
     }
 

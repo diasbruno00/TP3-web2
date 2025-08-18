@@ -20,8 +20,6 @@ public class InvestmentsDomain {
     private LocalDateTime purchaseDate;
     private Float initialInvestment;
 
-    public void calculateInitialInvestment() {
-       this.initialInvestment = this.quantity * this.purchasePrice;
-    }
+
 
 }
