@@ -3,6 +3,7 @@ package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.converter.InvestimentsConverter;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.InvestmentsDomain;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.EditInvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsSummaryDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
@@ -10,8 +11,8 @@ import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.models.Inv
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.repositories.IInvestimentsRepository;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.awesomeApi.AwesomeApi;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.brapiApi.BrapiClient;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.response.AwesomeApiCriptoResponse;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.response.QuoteResponse;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.response.AwesomeApiCriptoResponseDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.response.QuoteResponseDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class InvestimentsService {
     private final AwesomeApi  awesomeApi;
 
     public InvestimentsSummaryDTO investimentsSummary(){
+        // Calcular o total investido, a contagem de ativos e o total por tipo
         Float totalInvested = investimentsRepository.sumAllInitialInvestments();
         Long  assetCount = investimentsRepository.countAllInvestments();
         List<Object[]> totalByType = investimentsRepository.sumInitialInvestmentByType();
@@ -45,7 +47,7 @@ public class InvestimentsService {
         if(investmentsDomain.getType()== EnumInvestimentsType.ACAO) {
 
             //  Obter o preço atual da ação usando o BrapiClient
-            QuoteResponse response = brapiClient.getQuote(investmentsDomain.getSymbol());
+            QuoteResponseDTO response = brapiClient.getQuote(investmentsDomain.getSymbol());
 
             // obter o preço atual da ação
             Double precoAtual = response.getResults().get(0).getRegularMarketPrice();
@@ -56,21 +58,21 @@ public class InvestimentsService {
 
             // Obter o preço atual da criptomoeda usando o AwesomeApiCriptoClient
 
-            AwesomeApiCriptoResponse response = awesomeApi.getCripto(investmentsDomain.getSymbol());
+            AwesomeApiCriptoResponseDTO response = awesomeApi.getCripto(investmentsDomain.getSymbol());
             System.out.print(response);
 
             // Obter o preço de compra (bid) da criptomoeda
             String symbol = investmentsDomain.getSymbol() + "BRL";
-            AwesomeApiCriptoResponse.CriptoBRL cripto = response.getQuotes().get(symbol);
+            AwesomeApiCriptoResponseDTO.CriptoBRL cripto = response.getQuotes().get(symbol);
 
             if (cripto != null) {
                 String precoCompra = cripto.getBid();
                 investmentsDomain.setPurchasePrice(Float.parseFloat(precoCompra));
             }
 
-        } else {
-            throw new RuntimeException("Tipo de investimento não suportado: " + investmentsDomain.getType());
-        }
+        } //else {
+            //throw new RuntimeException("Tipo de investimento não suportado: " + investmentsDomain.getType());
+        //}
 
         investmentsDomain.calculateInitialInvestment();
 
@@ -90,6 +92,9 @@ public class InvestimentsService {
     }
 
 
+
+
+
     public List<InvestimentsDTO> getAllByTypeInvestiments(EnumInvestimentsType type) {
 
         List<InvestimentsModel> investimentsModel = investimentsRepository.findAllByType(type);
@@ -100,6 +105,8 @@ public class InvestimentsService {
 
     }
 
+
+
     public InvestimentsDTO deleteInvestimentById(UUID id) {
         Optional<InvestimentsModel> investimentOptional = investimentsRepository.findById(id);
         if (investimentOptional.isPresent()) {
@@ -109,4 +116,24 @@ public class InvestimentsService {
             throw new RuntimeException("Investimento não encontrado com o ID: " + id);
         }
     }
+
+    public EditInvestimentsDTO updateInvestimentById(EditInvestimentsDTO investiment) {
+
+        Optional<InvestimentsModel> investimentOptional = investimentsRepository.findById(investiment.id());
+
+        if(investimentOptional.isEmpty()){
+            throw new RuntimeException("Investimento não encontrado com o ID: " + investiment.id());
+        }
+
+        InvestimentsModel investimentsModel = investimentOptional.get();
+        investimentsModel.setQuantity(investiment.quantity());
+        investimentsModel.setPurchasePrice(investiment.purchasePrice());
+
+        return InvestimentsConverter.toEditInvestmentsModel(investimentsRepository.save(investimentsModel));
+
+    }
+
+
+
+
 }

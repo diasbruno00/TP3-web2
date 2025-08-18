@@ -1,12 +1,10 @@
 package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.awesomeApi;
 
 
-
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.response.AwesomeApiCriptoResponse;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.clients.response.AwesomeApiCriptoResponseDTO;
 
 @FeignClient(
     name = "awesomeApiClient",
@@ -15,6 +13,6 @@ import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.cl
 public interface AwesomeApi {
 
     @GetMapping("/json/last/{cripto}-BRL")
-    AwesomeApiCriptoResponse getCripto(@PathVariable("cripto") String cripto);
+    AwesomeApiCriptoResponseDTO getCripto(@PathVariable("cripto") String cripto);
 }
 

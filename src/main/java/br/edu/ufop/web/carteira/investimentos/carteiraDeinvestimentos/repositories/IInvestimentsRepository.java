@@ -19,7 +19,6 @@ public interface IInvestimentsRepository extends JpaRepository<InvestimentsModel
  @Query("SELECT COUNT(i) FROM InvestimentsModel i")
  Long countAllInvestments();
 
- // carteiraDeinvestimentos/src/main/java/br/edu/ufop/web/carteira/investimentos/carteiraDeinvestimentos/repositories/IInvestimentsRepository.java
  @Query("SELECT i.type, SUM(i.initialInvestment) FROM InvestimentsModel i GROUP BY i.type")
  List<Object[]> sumInitialInvestmentByType();
 

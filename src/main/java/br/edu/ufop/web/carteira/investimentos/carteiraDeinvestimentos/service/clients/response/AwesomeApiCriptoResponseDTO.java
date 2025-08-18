@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class AwesomeApiCriptoResponse {
+public class AwesomeApiCriptoResponseDTO {
 
     private Map<String, CriptoBRL> quotes = new HashMap<>();
 

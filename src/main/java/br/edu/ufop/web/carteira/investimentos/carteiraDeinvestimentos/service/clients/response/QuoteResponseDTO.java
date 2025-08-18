@@ -4,7 +4,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class QuoteResponse {
+public class QuoteResponseDTO {
     private List<Stock> results;
 
     @Data

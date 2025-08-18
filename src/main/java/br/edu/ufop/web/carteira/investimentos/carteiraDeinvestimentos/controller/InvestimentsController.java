@@ -1,6 +1,7 @@
 package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.controller;
 
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.EditInvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsSummaryDTO;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
@@ -19,7 +20,12 @@ public class InvestimentsController {
 
     private final InvestimentsService investimentsService;
 
-
+    /**
+     * Endpoint para obter o resumo dos investimentos.
+     * Retorna um objeto InvestimentsSummaryDTO contendo o total investido, a contagem de ativos e o total por tipo.
+     *
+     * @return ResponseEntity com o resumo dos investimentos ou erro 400 em caso de falha.
+     */
     @GetMapping("/summary")
     public ResponseEntity<InvestimentsSummaryDTO> investimentsSummary() {
         try {
@@ -30,6 +36,13 @@ public class InvestimentsController {
         }
     }
 
+    /**
+     * Endpoint para criar um novo investimento.
+     * Recebe um objeto CreateInvestimentsDTO no corpo da requisição e retorna o investimento criado.
+     *
+     * @param investiment Objeto DTO contendo os dados do investimento a ser criado.
+     * @return ResponseEntity com o InvestimentsDTO criado ou erro 400 em caso de falha.
+     */
     @PostMapping
     public ResponseEntity<InvestimentsDTO> createInvestiment(@RequestBody CreateInvestimentsDTO investiment) {
         try{
@@ -44,6 +57,12 @@ public class InvestimentsController {
 
     }
 
+    /**
+     * Endpoint para obter todos os investimentos.
+     * Retorna uma lista de InvestimentsDTO representando todos os investimentos cadastrados.
+     *
+     * @return ResponseEntity com a lista de investimentos ou erro 400 em caso de falha.
+     */
     @GetMapping
     public ResponseEntity<List<InvestimentsDTO>> getAllInvestments() {
         try {
@@ -55,6 +74,13 @@ public class InvestimentsController {
     }
 
 
+    /**
+     * Endpoint para obter investimentos por ID.
+     * Retorna um InvestimentsDTO correspondente ao ID fornecido.
+     *
+     * @param  "id UUID do investimento a ser buscado.
+     * @return ResponseEntity com o InvestimentsDTO encontrado ou erro 400 em caso de falha.
+     */
     @GetMapping("/type={type}")
     public ResponseEntity<List<InvestimentsDTO>> getAllByTypeInvestiments(@PathVariable EnumInvestimentsType type) {
         try {
@@ -65,6 +91,13 @@ public class InvestimentsController {
         }
     }
 
+    /**
+     * Endpoint para deletar um investimento por ID.
+     * Recebe o ID do investimento a ser deletado e retorna o InvestimentsDTO deletado.
+     *
+     * @param id UUID do investimento a ser deletado.
+     * @return ResponseEntity com o InvestimentsDTO deletado ou erro 400 em caso de falha.
+     */
     @DeleteMapping("/id={id}")
     public ResponseEntity<InvestimentsDTO> deleteInvestimentById(@PathVariable UUID id) {
         try {
@@ -75,6 +108,15 @@ public class InvestimentsController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<EditInvestimentsDTO> updateInvestimentById(@RequestBody EditInvestimentsDTO investiment) {
+        try {
+            return ResponseEntity.ok(investimentsService.updateInvestimentById(investiment));
+        } catch (Exception e) {
+            System.out.println("Erro ao atualizar investimento: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 
 }

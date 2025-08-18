@@ -17,18 +17,10 @@ public class InvestimentsConverter {
                 .type(investiments.type())
                 .symbol(investiments.symbol())
                 .quantity(investiments.quantity())
+                .purchasePrice(investiments.purchasePrice())
                 .build();
     }
 
-    public static InvestmentsDomain toInvestmentsDomain(EditInvestimentsDTO investments) {
-        InvestmentsDomain investmentsDomain = new InvestmentsDomain();
-        investmentsDomain.setSymbol(investments.symbol());
-        investmentsDomain.setQuantity(investments.quantity());
-        investmentsDomain.setPurchasePrice(investments.purchasePrice());
-        investmentsDomain.setInitialInvestment(investments.initialInvestment());
-        investmentsDomain.calculateInitialInvestment();
-        return investmentsDomain;
-    }
 
 
     public static InvestimentsModel toInvestimentsModel(InvestmentsDomain investments) {
@@ -55,6 +47,23 @@ public class InvestimentsConverter {
                 investments.getPurchaseDate(),
                 investments.getInitialInvestment()
 
+        );
+    }
+
+    public static InvestmentsDomain toEditInvestmentsDomain(EditInvestimentsDTO investments) {
+        InvestmentsDomain investmentsDomain = new InvestmentsDomain();
+        investmentsDomain.setId(investments.id());
+        investmentsDomain.setQuantity(investments.quantity());
+        investmentsDomain.setPurchasePrice(investments.purchasePrice());
+        investmentsDomain.calculateInitialInvestment();
+        return investmentsDomain;
+    }
+
+    public static EditInvestimentsDTO toEditInvestmentsModel(InvestimentsModel investments) {
+        return new EditInvestimentsDTO(
+                investments.getId(),
+                investments.getQuantity(),
+                investments.getPurchasePrice()
         );
     }
 
