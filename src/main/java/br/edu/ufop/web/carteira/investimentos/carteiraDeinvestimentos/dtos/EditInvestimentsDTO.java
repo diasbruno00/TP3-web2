@@ -5,7 +5,8 @@ import java.util.UUID;
 public record EditInvestimentsDTO(
         UUID id,
         Integer quantity,
-        Float purchasePrice
+        Float purchasePrice,
+        Float salePrice
 ) {
 
 }

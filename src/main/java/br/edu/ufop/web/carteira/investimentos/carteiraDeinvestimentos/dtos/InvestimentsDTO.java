@@ -12,7 +12,13 @@ public record InvestimentsDTO(
         Integer quantity,
         Float purchasePrice,
         LocalDateTime purchaseDate,
-        Float initialInvestment
+        Float initialInvestment,
+
+
+        Float salePrice,
+        String statusProfitOrLoss,
+        Float finalInvestment,
+        Float profit
 
 ) {
 }

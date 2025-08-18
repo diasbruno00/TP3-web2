@@ -27,6 +27,13 @@ public class InvestimentsModel {
     private Float initialInvestment;
 
 
+    private Float salePrice;
+    private String statusProfitOrLoss;
+    private Float finalInvestment;
+    private Float profit;
+
+
+
     @PrePersist
     public void prePersist() {
             this.purchaseDate = LocalDateTime.now();

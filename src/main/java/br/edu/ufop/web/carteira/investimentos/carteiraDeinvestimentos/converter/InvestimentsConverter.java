@@ -45,16 +45,24 @@ public class InvestimentsConverter {
                 investments.getQuantity(),
                 investments.getPurchasePrice(),
                 investments.getPurchaseDate(),
-                investments.getInitialInvestment()
+                investments.getInitialInvestment(),
+                investments.getSalePrice(),
+                investments.getStatusProfitOrLoss(),
+                investments.getFinalInvestment(),
+                investments.getProfit()
+
 
         );
     }
+
+
 
     public static InvestmentsDomain toEditInvestmentsDomain(EditInvestimentsDTO investments) {
         InvestmentsDomain investmentsDomain = new InvestmentsDomain();
         investmentsDomain.setId(investments.id());
         investmentsDomain.setQuantity(investments.quantity());
         investmentsDomain.setPurchasePrice(investments.purchasePrice());
+        investmentsDomain.setSalePrice(investments.salePrice());
         return investmentsDomain;
     }
 
@@ -62,9 +70,26 @@ public class InvestimentsConverter {
         return new EditInvestimentsDTO(
                 investments.getId(),
                 investments.getQuantity(),
-                investments.getPurchasePrice()
+                investments.getPurchasePrice(),
+                investments.getSalePrice()
         );
     }
+
+    public static InvestmentsDomain toInvestmentsDomain(InvestimentsModel investments) {
+        return InvestmentsDomain.builder()
+                .id(investments.getId())
+                .type(investments.getType())
+                .symbol(investments.getSymbol())
+                .quantity(investments.getQuantity())
+                .purchasePrice(investments.getPurchasePrice())
+                .purchaseDate(investments.getPurchaseDate())
+                .initialInvestment(investments.getInitialInvestment())
+                .salePrice(investments.getSalePrice())
+                .statusProfitOrLoss(investments.getStatusProfitOrLoss())
+                .finalInvestment(investments.getFinalInvestment())
+                .build();
+    }
+
 
 
 

@@ -1,7 +1,6 @@
 package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.useCase;
 
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.InvestmentsDomain;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 

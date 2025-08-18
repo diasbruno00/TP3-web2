@@ -21,5 +21,12 @@ public class InvestmentsDomain {
     private Float initialInvestment;
 
 
+    private Float salePrice;
+    private String statusProfitOrLoss;
+    private Float finalInvestment;
+    private Float profit;
+
+
+
 
 }

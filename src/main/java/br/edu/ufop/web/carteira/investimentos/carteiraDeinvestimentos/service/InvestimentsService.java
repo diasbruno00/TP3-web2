@@ -4,10 +4,7 @@ import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.converter.
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.InvestmentsDomain;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.useCase.CreateInvestimentsUseCase;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.domain.useCase.EditInvestimentsUseCase;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.EditInvestimentsDTO;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsSummaryDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.*;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.models.InvestimentsModel;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.repositories.IInvestimentsRepository;
@@ -128,16 +125,43 @@ public class InvestimentsService {
             throw new RuntimeException("Investimento não encontrado com o ID: " + investiment.id());
         }
 
+        // validar os dados do investimento antes de atualizar
         InvestmentsDomain investmentsDomain = InvestimentsConverter.toEditInvestmentsDomain(investiment);
+        System.out.print("InvestmentsDomain: " + investmentsDomain);
 
         EditInvestimentsUseCase editInvestimentsUseCase = new EditInvestimentsUseCase(investmentsDomain);
         editInvestimentsUseCase.validateEditInvestments();
 
+
         InvestimentsModel investimentsModel = investimentOptional.get();
         investimentsModel.setQuantity(investiment.quantity());
         investimentsModel.setPurchasePrice(investiment.purchasePrice());
+        investimentsModel.setSalePrice(investiment.salePrice());
 
         return InvestimentsConverter.toEditInvestmentsModel(investimentsRepository.save(investimentsModel));
+
+    }
+
+    public InvestimentsDTO CalculateProfitOrLoss(UUID id) {
+
+        Optional<InvestimentsModel> investimentOptional = investimentsRepository.findById(id);
+        if (investimentOptional.isEmpty()) {
+            throw new RuntimeException("Investimento não encontrado com o ID: " + id);
+        }
+
+        InvestimentsModel investimentsModel = investimentOptional.get();
+        InvestmentsDomain investmentsDomain = InvestimentsConverter.toInvestmentsDomain(investimentsModel);
+
+        EditInvestimentsUseCase editInvestimentsDTO = new EditInvestimentsUseCase(investmentsDomain);
+        editInvestimentsDTO.CalculateProfitOrLoss();
+
+        InvestimentsModel investimentsModelAtualizado = InvestimentsConverter.toInvestimentsModel(investmentsDomain);
+        investimentsModelAtualizado.setFinalInvestment(investmentsDomain.getFinalInvestment());
+        investimentsModelAtualizado.setStatusProfitOrLoss(investmentsDomain.getStatusProfitOrLoss());
+        investimentsModelAtualizado.setSalePrice(investmentsDomain.getSalePrice());
+        investimentsModelAtualizado.setProfit(investmentsDomain.getProfit());
+
+        return InvestimentsConverter.toInvestimentsDTO(investimentsRepository.save(investimentsModelAtualizado));
 
     }
 

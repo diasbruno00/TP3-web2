@@ -1,9 +1,6 @@
 package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.controller;
 
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.CreateInvestimentsDTO;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.EditInvestimentsDTO;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsDTO;
-import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.InvestimentsSummaryDTO;
+import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos.*;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.enums.EnumInvestimentsType;
 import br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.service.InvestimentsService;
 import lombok.AllArgsConstructor;
@@ -113,6 +110,15 @@ public class InvestimentsController {
     public ResponseEntity<EditInvestimentsDTO> updateInvestimentById(@RequestBody EditInvestimentsDTO investiment) {
             return ResponseEntity.ok(investimentsService.updateInvestimentById(investiment));
     }
+
+    @GetMapping("/status/{id}")
+    public ResponseEntity<InvestimentsDTO> updateStatusInvestimentById(@PathVariable UUID id ) {
+
+            return ResponseEntity.ok(investimentsService.CalculateProfitOrLoss(id));
+
+    }
+
+
 
 
 }

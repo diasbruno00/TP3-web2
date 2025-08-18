@@ -11,10 +11,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDTO> handleAllExceptions(Exception ex) {
-        // Opcional: imprimir a stack trace para debug no console do servidor
-        // ex.printStackTrace();
+        ex.printStackTrace();
 
-        // Log do erro (opcional)
         System.out.println("Ocorreu uma exceção: " + ex.getMessage());
 
         // Cria o DTO de erro com a mensagem da exceção
