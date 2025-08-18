@@ -51,7 +51,6 @@ public class InvestimentsConverter {
                 investments.getFinalInvestment(),
                 investments.getProfit()
 
-
         );
     }
 
@@ -62,7 +61,6 @@ public class InvestimentsConverter {
         investmentsDomain.setId(investments.id());
         investmentsDomain.setQuantity(investments.quantity());
         investmentsDomain.setPurchasePrice(investments.purchasePrice());
-        investmentsDomain.setSalePrice(investments.salePrice());
         return investmentsDomain;
     }
 
@@ -70,8 +68,7 @@ public class InvestimentsConverter {
         return new EditInvestimentsDTO(
                 investments.getId(),
                 investments.getQuantity(),
-                investments.getPurchasePrice(),
-                investments.getSalePrice()
+                investments.getPurchasePrice()
         );
     }
 

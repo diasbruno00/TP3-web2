@@ -2,10 +2,9 @@ package br.edu.ufop.web.carteira.investimentos.carteiraDeinvestimentos.dtos;
 
 import java.util.UUID;
 
-public record EditInvestimentsDTO(
+public record SaleInvestimentsDTO(
         UUID id,
-        Integer quantity,
-        Float purchasePrice
+        Float salePrice,
+        Integer quantity
 ) {
-
 }

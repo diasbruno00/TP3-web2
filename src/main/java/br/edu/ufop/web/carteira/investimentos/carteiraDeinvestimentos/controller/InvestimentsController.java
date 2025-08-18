@@ -111,10 +111,10 @@ public class InvestimentsController {
             return ResponseEntity.ok(investimentsService.updateInvestimentById(investiment));
     }
 
-    @GetMapping("/status/{id}")
-    public ResponseEntity<InvestimentsDTO> updateStatusInvestimentById(@PathVariable UUID id ) {
+    @PutMapping("/sale")
+    public ResponseEntity<InvestimentsDTO> updateStatusInvestimentById(@RequestBody SaleInvestimentsDTO saleInvestimentsDTO ) {
 
-            return ResponseEntity.ok(investimentsService.CalculateProfitOrLoss(id));
+            return ResponseEntity.ok(investimentsService.CalculateProfitOrLoss(saleInvestimentsDTO));
 
     }
 

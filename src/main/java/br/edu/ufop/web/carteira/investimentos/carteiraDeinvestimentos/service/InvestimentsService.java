@@ -127,45 +127,46 @@ public class InvestimentsService {
 
         // validar os dados do investimento antes de atualizar
         InvestmentsDomain investmentsDomain = InvestimentsConverter.toEditInvestmentsDomain(investiment);
-        System.out.print("InvestmentsDomain: " + investmentsDomain);
 
         EditInvestimentsUseCase editInvestimentsUseCase = new EditInvestimentsUseCase(investmentsDomain);
         editInvestimentsUseCase.validateEditInvestments();
+        editInvestimentsUseCase.updateInitialInvestment();
 
 
         InvestimentsModel investimentsModel = investimentOptional.get();
         investimentsModel.setQuantity(investiment.quantity());
         investimentsModel.setPurchasePrice(investiment.purchasePrice());
-        investimentsModel.setSalePrice(investiment.salePrice());
+        investimentsModel.setInitialInvestment(investmentsDomain.getInitialInvestment());
+
 
         return InvestimentsConverter.toEditInvestmentsModel(investimentsRepository.save(investimentsModel));
 
     }
 
-    public InvestimentsDTO CalculateProfitOrLoss(UUID id) {
 
-        Optional<InvestimentsModel> investimentOptional = investimentsRepository.findById(id);
-        if (investimentOptional.isEmpty()) {
-            throw new RuntimeException("Investimento não encontrado com o ID: " + id);
-        }
+public InvestimentsDTO CalculateProfitOrLoss(SaleInvestimentsDTO saleInvestimentsDTO) {
 
-        InvestimentsModel investimentsModel = investimentOptional.get();
-        InvestmentsDomain investmentsDomain = InvestimentsConverter.toInvestmentsDomain(investimentsModel);
-
-        EditInvestimentsUseCase editInvestimentsDTO = new EditInvestimentsUseCase(investmentsDomain);
-        editInvestimentsDTO.CalculateProfitOrLoss();
-
-        InvestimentsModel investimentsModelAtualizado = InvestimentsConverter.toInvestimentsModel(investmentsDomain);
-        investimentsModelAtualizado.setFinalInvestment(investmentsDomain.getFinalInvestment());
-        investimentsModelAtualizado.setStatusProfitOrLoss(investmentsDomain.getStatusProfitOrLoss());
-        investimentsModelAtualizado.setSalePrice(investmentsDomain.getSalePrice());
-        investimentsModelAtualizado.setProfit(investmentsDomain.getProfit());
-
-        return InvestimentsConverter.toInvestimentsDTO(investimentsRepository.save(investimentsModelAtualizado));
-
+    Optional<InvestimentsModel> investimentOptional = investimentsRepository.findById(saleInvestimentsDTO.id());
+    if (investimentOptional.isEmpty()) {
+        throw new RuntimeException("Investimento não encontrado com o ID: " + saleInvestimentsDTO.id());
     }
 
+    InvestimentsModel investimentsModel = investimentOptional.get();
+    InvestmentsDomain investmentsDomain = InvestimentsConverter.toInvestmentsDomain(investimentsModel);
 
+    // Calcula lucro/prejuízo usando o use case
+    EditInvestimentsUseCase editInvestimentsUseCase = new EditInvestimentsUseCase(investmentsDomain);
+    editInvestimentsUseCase.CalculateProfitOrLoss(saleInvestimentsDTO.quantity(), saleInvestimentsDTO.salePrice());
 
+    // Atualiza apenas os campos necessários no model recuperado
+    investimentsModel.setQuantity(investmentsDomain.getQuantity());
+    investimentsModel.setFinalInvestment(investmentsDomain.getFinalInvestment());
+    investimentsModel.setStatusProfitOrLoss(investmentsDomain.getStatusProfitOrLoss());
+    investimentsModel.setSalePrice(investmentsDomain.getSalePrice());
+    investimentsModel.setProfit(investmentsDomain.getProfit());
+
+    // Salva e retorna o DTO atualizado
+    return InvestimentsConverter.toInvestimentsDTO(investimentsRepository.save(investimentsModel));
+}
 
 }
