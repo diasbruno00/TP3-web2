@@ -34,7 +34,7 @@ public class EditInvestimentsUseCase {
                 }else{
                     investmentsDomain.setStatusProfitOrLoss("Loss");
                 }
-                
+
                 investmentsDomain.setProfit(profitOrLoss - inicialInvestment);
                 investmentsDomain.setFinalInvestment(profitOrLoss);
 
