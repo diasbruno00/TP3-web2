@@ -102,3 +102,6 @@ docker-compose -f docker-compose-dev.yaml up
 ## Autor
 
 Bruno Dias
+
+## Link youtube apresentação
+https://youtu.be/9SEiv0_d5YM?si=T1ONTxrrVIEUXIA9

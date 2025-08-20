@@ -19,6 +19,7 @@ public interface IInvestimentsRepository extends JpaRepository<InvestimentsModel
  @Query("SELECT COUNT(i) FROM InvestimentsModel i")
  Long countAllInvestments();
 
+
  @Query("SELECT i.type, SUM(i.initialInvestment) FROM InvestimentsModel i GROUP BY i.type")
  List<Object[]> sumInitialInvestmentByType();
 

@@ -111,6 +111,7 @@ public class InvestimentsController {
             return ResponseEntity.ok(investimentsService.updateInvestimentById(investiment));
     }
 
+
     @PutMapping("/sale")
     public ResponseEntity<InvestimentsDTO> updateStatusInvestimentById(@RequestBody SaleInvestimentsDTO saleInvestimentsDTO ) {
 
